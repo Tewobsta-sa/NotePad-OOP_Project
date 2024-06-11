@@ -5,6 +5,8 @@ public void actionPerformed(ActionEvent e) {
             openFile();
         } else if (e.getSource() == newMI) {
             newFile();
+        }else if (e.getSource()==exitMI) {
+            exitProgram();
         }
     }
 
@@ -25,6 +27,20 @@ public void actionPerformed(ActionEvent e) {
             File file = fileChooser.getSelectedFile();
             // Open the file
             // ...
+        }
+    }
+    private void exitProgram(){
+        int option = JOptionPane.showOptionDialog(
+                window,
+                "Are you sure u want to exit?",
+                "Exit",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                null,
+                0);
+        if (option == JOptionPane.YES_OPTION){
+            System.exit(0);
         }
     }
 
