@@ -1,3 +1,4 @@
+//this is just what i've been tinkering with
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,7 +8,7 @@ public class Notepad extends JFrame{
   JButton save,toggle;
   JTextArea textarea;
   JMenu edit,about;
-  
+                                           
   JMenuBar mb=new JMenuBar();
   
   public Notepad(){
@@ -30,13 +31,11 @@ public class Notepad extends JFrame{
 
     about=new JMenu("About");
     mb.add(about); 
-    toggle=new JButton("<<");
-    toggle.setSize(10,10);
-    add(toggle,BorderLayout.EAST);
+   
 
     panel3=new JPanel();
     panel3.setVisible(false);
-    //add(panel3,BorderLayout.EAST);
+   
     add(panel2,BorderLayout.SOUTH);
     add(panel1,BorderLayout.CENTER);
    
