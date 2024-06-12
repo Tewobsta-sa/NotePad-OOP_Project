@@ -1,4 +1,5 @@
 package NPad;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedWriter;
@@ -36,6 +37,7 @@ import javax.swing.undo.UndoManager;
     private JMenu aboutMenu;
     private JMenuItem authorsMI;
     private JMenuItem versionMI;
+    
     private JMenu format;
     private JMenu fontstyle;
     private JMenu fontsize;
@@ -70,7 +72,6 @@ import javax.swing.undo.UndoManager;
         createFormatMenu();
         createAboutMenu();
         createTextArea();
-        createFormatMenu();
         createThemeButton();
         createSouthPanel();
         undoManager = new UndoManager();
@@ -236,6 +237,7 @@ import javax.swing.undo.UndoManager;
     void createTextArea() {
         textArea = new JTextArea();
         textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
         textArea.setFont(new Font("Calibri", Font.PLAIN, 25));
         window.add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
