@@ -1,17 +1,16 @@
 package NPad;
-
+import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.undo.UndoManager;
 
-public class GUI extends JFrame implements ActionListener {
+ public class GUI extends JFrame implements ActionListener {
     private JFrame window;
     
     private JPanel southPanel;
@@ -32,14 +31,31 @@ public class GUI extends JFrame implements ActionListener {
     private JMenuItem redoMI;
     private JMenuItem undoMI;
     
-    private JMenu formatMenu;
-    private JMenuItem fontTypeMI;
-    private JMenuItem fontSizeMI;
-    private JMenuItem fontColorMI;
+   
 
     private JMenu aboutMenu;
     private JMenuItem authorsMI;
     private JMenuItem versionMI;
+    private JMenu format;
+    private JMenu fontstyle;
+    private JMenu fontsize;
+    private JMenu fontFamily;
+
+    private JMenuItem fontSize1;
+    private JMenuItem fontSize2;
+    private JMenuItem fontSize3;
+    private JMenuItem fontSize4;
+    private JMenuItem fontSize5;
+    private JMenuItem fontSize6;
+    
+    private JMenuItem fontstyle1;
+    private JMenuItem fontstyle2;
+
+    private JMenuItem calibri;
+    private JMenuItem arial;
+    private JMenuItem timesNew;
+    private JMenuItem consolas;
+    private JMenuItem georgia;
 
     private UndoManager undoManager;
     
@@ -54,12 +70,14 @@ public class GUI extends JFrame implements ActionListener {
         createFormatMenu();
         createAboutMenu();
         createTextArea();
+        createFormatMenu();
         createThemeButton();
         createSouthPanel();
         undoManager = new UndoManager();
         textArea.getDocument().addUndoableEditListener(undoManager);
         addCharCounter();
         addWordCounter();
+
     }
 
     void createFrame() {
@@ -126,24 +144,65 @@ public class GUI extends JFrame implements ActionListener {
         menuBar.add(editMenu);
     }
     
-    void createFormatMenu() {
-    	// JMenu
-        formatMenu = new JMenu("Format");
+    void createFormatMenu(){
+        format=new JMenu("Format");
+        fontsize=new JMenu("Font size");
+        fontstyle=new JMenu("Font style");
+        fontSize1=new JMenuItem("10");
+        fontSize2=new JMenuItem("11");
+        fontSize3=new JMenuItem("12");
+        fontSize4=new JMenuItem("14");
+        fontSize5=new JMenuItem("16");
+        fontSize6=new JMenuItem("20");
+        fontstyle1=new JMenuItem("Bold");
+        fontstyle2=new JMenuItem("Italic");
+        fontFamily=new JMenu("Font Family");
+
+        arial=new JMenuItem("Arial");
+        calibri=new JMenuItem("Calibri");
+        consolas=new JMenuItem("Consolas");
+        georgia=new JMenuItem("Georgia");
+        timesNew=new JMenuItem("Times New Roman");
+
+        fontsize.add(fontSize1);
+        fontsize.add(fontSize2);
+        fontsize.add(fontSize3);
+        fontsize.add(fontSize4);
+        fontsize.add(fontSize5);
+        fontsize.add(fontSize6);
+
+        fontstyle.add(fontstyle1);
+        fontstyle.add(fontstyle2);
+
+        fontFamily.add(arial);
+        fontFamily.add(calibri);
+        fontFamily.add(consolas);
+        fontFamily.add(georgia);
+        fontFamily.add(timesNew);
         
-        // JMenuItem
-        fontTypeMI = new JMenuItem("Font Type");
-        fontSizeMI = new JMenuItem("Font Size");
-        fontColorMI = new JMenuItem("Font Color");
+        format.add(fontsize);
+        format.add(fontstyle);
+        format.add(fontFamily);
+        menuBar.add(format);
+
+        fontSize1.addActionListener(this);
         
-        formatMenu.add(fontTypeMI);
-        formatMenu.add(fontSizeMI);
-        formatMenu.add(fontColorMI);
-        
-        fontTypeMI.addActionListener(this);
-        fontSizeMI.addActionListener(this);
-        fontColorMI.addActionListener(this);
-        
-        menuBar.add(formatMenu);
+        fontSize2.addActionListener(this);
+        fontSize3.addActionListener(this);
+        fontSize4.addActionListener(this);
+        fontSize5.addActionListener(this);
+        fontSize6.addActionListener(this);
+
+        fontstyle1.addActionListener(this);
+        fontstyle2.addActionListener(this);
+
+        arial.addActionListener(this);
+        calibri.addActionListener(this);
+        consolas.addActionListener(this);
+        georgia.addActionListener(this);
+        timesNew.addActionListener(this);
+
+
     }
     
     void createAboutMenu() {
@@ -250,7 +309,106 @@ public class GUI extends JFrame implements ActionListener {
         	showFindDialog();
         } else if (e.getSource() == themeButton) {
             changeTheme();
+        }else if(e.getSource()==fontSize1){
+            changeFontSize(1);
+         }else if(e.getSource()==fontSize2){
+             changeFontSize(2);
+         }else if(e.getSource()==fontSize3){
+             changeFontSize(3);
+         }else if(e.getSource()==fontSize4){
+             changeFontSize(4);
+         }else if(e.getSource()==fontSize5){
+             changeFontSize(5);
+         }else if(e.getSource()==fontSize6){
+             changeFontSize(6);
+         }else if(e.getSource()==fontstyle1){
+             changeFontStyle(1);
+         }else if(e.getSource()==fontstyle2){
+             changeFontStyle(2);
+         }else if(e.getSource()==arial){
+             changeFontFamily(1);
+         }else if(e.getSource()==calibri){
+             changeFontFamily(2);
+         }else if(e.getSource()==consolas){
+             changeFontFamily(3);
+         }else if(e.getSource()==georgia){
+             changeFontFamily(4);
+         }else if(e.getSource()==timesNew){
+             changeFontFamily(5);
+         }
+    }
+    private void changeFontFamily(int n){
+        Font currentFont=textArea.getFont();
+        Font newFont;
+        switch(n){
+            
+            case 1:
+            newFont=new Font("Arial",currentFont.getStyle(),currentFont.getSize());
+            textArea.setFont(newFont);
+            break;
+            case 2:
+            newFont=new Font("Calibri",currentFont.getStyle(),currentFont.getSize());
+            textArea.setFont(newFont);
+            break;
+            case 3:
+            newFont=new Font("Consolas",currentFont.getStyle(),currentFont.getSize());
+            textArea.setFont(newFont);
+            break;
+            case 4:
+            newFont=new Font("Georgia",currentFont.getStyle(),currentFont.getSize());
+            textArea.setFont(newFont);
+            break;
+            case 5:
+            newFont=new Font("Times New Roman",currentFont.getStyle(),currentFont.getSize());
+            textArea.setFont(newFont);
+            break;
         }
+    }
+    private void changeFontStyle(int n){
+        Font currentFont=textArea.getFont();
+        Font newFont;
+        switch(n){
+            
+            case 1:
+            newFont=currentFont.deriveFont(Font.BOLD);
+            textArea.setFont(newFont);
+            break;
+            case 2:
+            newFont=currentFont.deriveFont(Font.ITALIC);
+            textArea.setFont(newFont);
+            break;
+        }
+    }
+    private void changeFontSize(int n){
+        
+        Font currentFont=textArea.getFont();
+        Font newFont;
+         switch(n){
+            case 1:
+            newFont=currentFont.deriveFont(10f);
+            textArea.setFont(newFont);
+            break;
+            case 2:
+            newFont=currentFont.deriveFont(11f);
+            textArea.setFont(newFont);
+            break;
+            case 3:
+            newFont=currentFont.deriveFont(12f);
+            textArea.setFont(newFont);
+            break;
+            case 4:
+            newFont=currentFont.deriveFont(14f);
+            textArea.setFont(newFont);
+            break;
+            case 5:
+            newFont=currentFont.deriveFont(15f);
+            textArea.setFont(newFont);
+            break;
+            case 6:
+            newFont=currentFont.deriveFont(20f);
+            textArea.setFont(newFont);
+            break;
+         }
     }
 
 	private void saveFile()  {
@@ -392,3 +550,4 @@ public class GUI extends JFrame implements ActionListener {
 	}
     
     }
+   
