@@ -1,5 +1,5 @@
-
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,14 +24,16 @@ public class GUI extends JFrame implements ActionListener {
     private JMenuItem undoMI;
 
     private JMenu aboutMenu;
+    private JMenuItem authorsMI;
+    private JMenuItem versionMI;
 
-    private JButton aboutButton;
 
     // Constructor
     public GUI() {
         createFrame();
         createFileMenu();
         createEditMenu();
+        createAboutMenu();
         createTextArea();
     }
 
@@ -77,14 +79,11 @@ public class GUI extends JFrame implements ActionListener {
     void createEditMenu() {
         // JMenu
         editMenu = new JMenu("Edit");
-        aboutMenu = new JMenu("About");
 
         // JMenuItem
         findMI = new JMenuItem("Find");
         redoMI = new JMenuItem("Redo");
         undoMI = new JMenuItem("Undo");
-
-        aboutMenu.addActionListener(this);
 
         findMI.addActionListener(this);
         redoMI.addActionListener(this);
@@ -95,6 +94,22 @@ public class GUI extends JFrame implements ActionListener {
         editMenu.add(undoMI);
 
         menuBar.add(editMenu);
+    }
+    
+    void createAboutMenu() {
+    	// JMenu
+        aboutMenu = new JMenu("About");
+        
+        // JMenuItem
+        authorsMI = new JMenuItem("Authors");
+        versionMI = new JMenuItem("Version");
+        
+        authorsMI.addActionListener(this);
+        versionMI.addActionListener(this);
+        
+        aboutMenu.add(authorsMI);
+        aboutMenu.add(versionMI);
+        
         menuBar.add(aboutMenu);
     }
 
@@ -107,40 +122,58 @@ public class GUI extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == saveMI) {
-            FileDialog fileDialog = new FileDialog(window, "Save File", FileDialog.SAVE);// the mode FileDialog.SAVE  sets it to a save dialog.
-            fileDialog.setVisible(true);
-            String filePath = fileDialog.getDirectory() + fileDialog.getFile();
-            /*fileDialog.getDirectory() gets the directory chosen by the user.
-fileDialog.getFile() gets the name of the file chosen by the user.
-These are concatenated to form the full file path. */
-            if (filePath != null) {// if the dialogue is not canceled
-                saveFile(filePath);
-            }
+        	saveFile();
         } else if (e.getSource() == openMI) {
-            FileDialog fileDialog = new FileDialog(window, "Open File", FileDialog.LOAD);//fFileDialog.Load sets it to an open dialogue
-            fileDialog.setVisible(true);
-            String filePath = fileDialog.getDirectory() + fileDialog.getFile();
-            if (filePath != null) {
-                openFile(filePath);
-            }
+        	openFile();
         } else if (e.getSource() == exitMI) {
             System.exit(0);
+        } else if (e.getSource() == versionMI) {
+        	showAboutDialog();
+        } else if (e.getSource() == newMI) {
+        	newFile();
         }
     }
 
-    private void saveFile(String filePath)  {
-        try (FileWriter writer = new FileWriter(filePath)) {
-            textArea.write(writer);
+    private void saveFile()  {
+        FileDialog fileDialog = new FileDialog(window, "Save File", FileDialog.SAVE);// the mode FileDialog.SAVE  sets it to a save dialog.
+        fileDialog.setVisible(true);
+        try {
+            /*  fileDialog.getDirectory() gets the directory chosen by the user.
+				fileDialog.getFile() gets the name of the file chosen by the user.
+				These are concatenated to form the full file path. */
+            String filePath = fileDialog.getDirectory() + fileDialog.getFile() + ".txt";
+            if (filePath != null) {
+    			BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
+    			String text = textArea.getText();
+    			bw.write(text);
+    			bw.close();
+            }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(window, "An error occurred while saving the file: " + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);// handles errors like inaccurate file paths, no enough space to save the file etc
         }
     }
 
-    private void openFile(String filePath) {
-        try (FileReader reader = new FileReader(filePath)) {
-            textArea.read(reader, null);
+    private void openFile() {
+        FileDialog fileDialog = new FileDialog(window, "Open File", FileDialog.LOAD);//fFileDialog.Load sets it to an open dialogue
+        fileDialog.setVisible(true);
+        
+        try {
+        	String filePath = fileDialog.getDirectory() + fileDialog.getFile();
+            if (filePath != null) {	
+	        	FileReader reader = new FileReader(filePath);
+	            textArea.read(reader, null);
+            }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(window, "An error occurred while opening the file: " + e.getMessage(), "Open Error", JOptionPane.ERROR_MESSAGE);// to handle errors when user tries to open a file that does not exist
+        	
         }
-        }
+     }
+    
+    public void newFile() {
+    	// TODO
+    }
+    
+    private void showAboutDialog() {
+        JOptionPane.showMessageDialog(this, "NotePad v1.0\nA simple notepad application\nCreated by us!", "About", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
     }
