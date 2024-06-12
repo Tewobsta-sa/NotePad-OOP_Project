@@ -9,7 +9,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.undo.UndoManager;
 
-public class GUI extends JFrame implements ActionListener {
+public class GUI extends JFrame implements ActionListener , KeyListener{
     private JFrame window;
 
     private JTextArea textArea;
@@ -62,9 +62,9 @@ public class GUI extends JFrame implements ActionListener {
         fileMenu = new JMenu("File");
 
         // JMenuItems
-        newMI = new JMenuItem("New");
-        openMI = new JMenuItem("Open");
-        saveMI = new JMenuItem("Save");
+        newMI = new JMenuItem("New (ctrl+N)");
+        openMI = new JMenuItem("Open (ctrl+O)");
+        saveMI = new JMenuItem("Save (ctrl+S)");
         exitMI = new JMenuItem("Exit");
 
         newMI.addActionListener(this);
@@ -87,9 +87,9 @@ public class GUI extends JFrame implements ActionListener {
         editMenu = new JMenu("Edit");
 
         // JMenuItem
-        findMI = new JMenuItem("Find");
-        redoMI = new JMenuItem("Redo");
-        undoMI = new JMenuItem("Undo");
+        findMI = new JMenuItem("Find (ctrl+F)");
+        redoMI = new JMenuItem("Redo (ctrl+Y)");
+        undoMI = new JMenuItem("Undo (ctrl+Z)");
 
         findMI.addActionListener(this);
         redoMI.addActionListener(this);
@@ -124,6 +124,7 @@ public class GUI extends JFrame implements ActionListener {
         textArea.setLineWrap(true);
         textArea.setFont(new Font("Calibri", Font.PLAIN, 25));
         window.add(new JScrollPane(textArea), BorderLayout.CENTER);
+	textArea.addKeyListener(this);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -253,6 +254,40 @@ public class GUI extends JFrame implements ActionListener {
     
     private void showVersionDialog() {
         JOptionPane.showMessageDialog(this, "NotePad v1.0\nA simple notepad application\nCreated by us!", "About", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S){
+            saveFile();
+        }
+        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_O){
+            openFile();
+        }
+        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z){
+            undo();
+        }
+        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Y){
+            redo();
+        }
+        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F){
+            showFindDialog();
+        }
+        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N){
+            newFileT();
+        }
+
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
     
     private void showAuthorsDialog() {
