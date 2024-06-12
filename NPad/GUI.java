@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
 
 public class GUI extends JFrame implements ActionListener {
     private JFrame window;
@@ -26,6 +27,7 @@ public class GUI extends JFrame implements ActionListener {
     private JMenu aboutMenu;
     private JMenuItem authorsMI;
     private JMenuItem versionMI;
+    private UndoManager undoManager;
 
 
     // Constructor
@@ -35,6 +37,8 @@ public class GUI extends JFrame implements ActionListener {
         createEditMenu();
         createAboutMenu();
         createTextArea();
+	undoManager = new UndoManager();
+        textArea.getDocument().addUndoableEditListener(undoManager);
     }
 
     void createFrame() {
@@ -175,6 +179,21 @@ public class GUI extends JFrame implements ActionListener {
     public void newFile() {
     	textArea.setText("");
     	window.setTitle("Untitled");
+    }
+    private void undo() {
+        if (undoManager.canUndo()) {
+            undoManager.undo();
+        } else {
+            JOptionPane.showMessageDialog(window, "Nothing to undo.");
+        }
+    }
+
+    private void redo() {
+        if (undoManager.canRedo()) {
+            undoManager.redo();
+        } else {
+            JOptionPane.showMessageDialog(window, "Nothing to redo.");
+        }
     }
     
     private void showVersionDialog() {
