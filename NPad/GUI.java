@@ -35,6 +35,7 @@ import javax.swing.undo.UndoManager;
     private JMenuItem findMI;
     private JMenuItem redoMI;
     private JMenuItem undoMI;
+    private JMenuItem replaceMI;
     
    
 
@@ -137,14 +138,17 @@ import javax.swing.undo.UndoManager;
         findMI = new JMenuItem("Find (ctrl+F)");
         redoMI = new JMenuItem("Redo (ctrl+Y)");
         undoMI = new JMenuItem("Undo (ctrl+Z)");
+        replaceMI = new JMenuItem("Replace");
 
         findMI.addActionListener(this);
         redoMI.addActionListener(this);
         undoMI.addActionListener(this);
+        replaceMI.addActionListener(this);
 
         editMenu.add(findMI);
         editMenu.add(redoMI);
         editMenu.add(undoMI);
+        editMenu.add(replaceMI);
 
         menuBar.add(editMenu);
     }
@@ -342,7 +346,9 @@ import javax.swing.undo.UndoManager;
              changeFontFamily(4);
          }else if(e.getSource()==timesNew){
              changeFontFamily(5);
-         }
+         }else if(e.getSource()==replaceMI){
+            showReplaceDialog();
+        }
     }
     private void changeFontFamily(int n){
         Font currentFont=textArea.getFont();
@@ -563,6 +569,28 @@ import javax.swing.undo.UndoManager;
             }
         });
         }
+     private void showReplaceDialog() {
+         String inputValue = JOptionPane.showInputDialog(this, "Find What?");
+         if (inputValue != null && !inputValue.isEmpty()) {
+             String replaceValue = JOptionPane.showInputDialog(this, "Replace with?");
+             if (replaceValue != null) {
+                 replace(inputValue, replaceValue);
+             }
+         }
+     }
+
+     private void replace(String searchText, String replaceText) {
+         String fullText = textArea.getText();
+
+         if (searchText.isEmpty() || replaceText.isEmpty()) {
+             return; // Exit if no search or replace input provided
+         }
+
+         String newText = fullText.replace(searchText, replaceText);
+         textArea.setText(newText);
+
+         textArea.getHighlighter().removeAllHighlights();
+     }
     
     @Override
     public void keyTyped(KeyEvent e) {
