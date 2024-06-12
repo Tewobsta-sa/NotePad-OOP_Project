@@ -1,5 +1,8 @@
 
 import java.awt.event.*;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.awt.*;
 import javax.swing.*;
 
@@ -104,13 +107,40 @@ public class GUI extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == saveMI) {
-            FileDialog fileDialog = new FileDialog(window, "Save File");
+            FileDialog fileDialog = new FileDialog(window, "Save File", FileDialog.SAVE);// the mode FileDialog.SAVE  sets it to a save dialog.
             fileDialog.setVisible(true);
-            textArea.setText("Save Clicked");
+            String filePath = fileDialog.getDirectory() + fileDialog.getFile();
+            /*fileDialog.getDirectory() gets the directory chosen by the user.
+fileDialog.getFile() gets the name of the file chosen by the user.
+These are concatenated to form the full file path. */
+            if (filePath != null) {// if the dialogue is not canceled
+                saveFile(filePath);
+            }
         } else if (e.getSource() == openMI) {
-            textArea.setText("Open Clicked");
-            FileDialog fileDialog = new FileDialog(window, "Open File", FileDialog.LOAD);
+            FileDialog fileDialog = new FileDialog(window, "Open File", FileDialog.LOAD);//fFileDialog.Load sets it to an open dialogue
             fileDialog.setVisible(true);
+            String filePath = fileDialog.getDirectory() + fileDialog.getFile();
+            if (filePath != null) {
+                openFile(filePath);
+            }
+        } else if (e.getSource() == exitMI) {
+            System.exit(0);
         }
     }
-}
+
+    private void saveFile(String filePath)  {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            textArea.write(writer);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(window, "An error occurred while saving the file: " + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);// handles errors like inaccurate file paths, no enough space to save the file etc
+        }
+    }
+
+    private void openFile(String filePath) {
+        try (FileReader reader = new FileReader(filePath)) {
+            textArea.read(reader, null);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(window, "An error occurred while opening the file: " + e.getMessage(), "Open Error", JOptionPane.ERROR_MESSAGE);// to handle errors when user tries to open a file that does not exist
+        }
+        }
+    }
