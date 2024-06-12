@@ -128,13 +128,15 @@ public class GUI extends JFrame implements ActionListener {
         } else if (e.getSource() == exitMI) {
             System.exit(0);
         } else if (e.getSource() == versionMI) {
-        	showAboutDialog();
+        	showVersionDialog();
         } else if (e.getSource() == newMI) {
         	newFile();
+        } else if (e.getSource() == authorsMI) {
+        	showAuthorsDialog();
         }
     }
 
-    private void saveFile()  {
+	private void saveFile()  {
         FileDialog fileDialog = new FileDialog(window, "Save File", FileDialog.SAVE);// the mode FileDialog.SAVE  sets it to a save dialog.
         fileDialog.setVisible(true);
         try {
@@ -146,6 +148,7 @@ public class GUI extends JFrame implements ActionListener {
     			BufferedWriter bw = new BufferedWriter(new FileWriter(filePath));
     			String text = textArea.getText();
     			bw.write(text);
+    			window.setTitle(fileDialog.getFile());
     			bw.close();
             }
         } catch (IOException e) {
@@ -162,6 +165,7 @@ public class GUI extends JFrame implements ActionListener {
             if (filePath != null) {	
 	        	FileReader reader = new FileReader(filePath);
 	            textArea.read(reader, null);
+	            window.setTitle(fileDialog.getFile());
             }
         } catch (IOException e) {
         	
@@ -169,11 +173,24 @@ public class GUI extends JFrame implements ActionListener {
      }
     
     public void newFile() {
-    	// TODO
+    	textArea.setText("");
+    	window.setTitle("Untitled");
     }
     
-    private void showAboutDialog() {
+    private void showVersionDialog() {
         JOptionPane.showMessageDialog(this, "NotePad v1.0\nA simple notepad application\nCreated by us!", "About", JOptionPane.INFORMATION_MESSAGE);
     }
+    
+    private void showAuthorsDialog() {
+        JOptionPane.showMessageDialog(this, 
+        		"Authors\n"
+        		+ "- Lydia Yoseph\r\n"
+        		+ "- Nathanael Cheramlak\r\n"
+        		+ "- Salem Gebru\r\n"
+        		+ "- Tewobsta Seyoum\r\n"
+        		+ "- Tsion Teklay\r\n"
+        		+ "- Umer Ahmed\r\n"
+        		+ "- Yohannes Alemu", "Author", JOptionPane.INFORMATION_MESSAGE);
+	}
     
     }
