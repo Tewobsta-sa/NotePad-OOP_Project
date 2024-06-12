@@ -31,6 +31,14 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
     private JMenuItem versionMI;
 
     private UndoManager undoManager;
+    ImageIcon light = new ImageIcon("sunlight.png");
+    ImageIcon dark = new ImageIcon("moon.png");
+
+
+    Image lightImage = light.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+    // Resize the dark image to 32x32 pixels
+    Image darkImage = dark.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+    boolean isDarkMode = false;
 
     // Constructor
     public GUI() {
@@ -49,6 +57,7 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         window.setIconImage(appIcon.getImage());
 
         window.setTitle("NotePad");
+	window.setIconImage(new ImageIcon("notepad.png").getImage());
         window.setSize(600, 600);
         window.setDefaultCloseOperation(EXIT_ON_CLOSE);
         window.setVisible(true);
@@ -119,6 +128,17 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         menuBar.add(aboutMenu);
     }
 
+    void createThemeButton() {
+        theme = new JButton();
+
+
+        theme.setIcon(new ImageIcon(darkImage));
+        theme.addActionListener(this);
+
+        menuBar.add(Box.createHorizontalGlue());
+        menuBar.add(theme);
+
+    }
     void createTextArea() {
         textArea = new JTextArea();
         textArea.setLineWrap(true);
@@ -146,6 +166,8 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         	undo();
         } else if (e.getSource() == findMI) {
         	showFindDialog();
+        } else if (e.getSource() == theme) {
+            changeTheme();
         }
     }
 
@@ -252,8 +274,22 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
     	}
     }
     
-    private void showVersionDialog() {
-        JOptionPane.showMessageDialog(this, "NotePad v1.0\nA simple notepad application\nCreated by us!", "About", JOptionPane.INFORMATION_MESSAGE);
+    private void changeTheme(){
+
+        if (isDarkMode) {
+            // Switch to light mode
+            theme.setIcon(new ImageIcon(lightImage));
+            textArea.setBackground(Color.white);
+            textArea.setForeground(Color.black);
+            isDarkMode = false;
+
+        } else {
+            // Switch to dark mode
+            theme.setIcon(new ImageIcon(darkImage));
+            textArea.setBackground(Color.darkGray);
+            textArea.setForeground(Color.white);
+            isDarkMode = true;
+        }
     }
 
     @Override
@@ -288,6 +324,9 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+     private void showVersionDialog() {
+        JOptionPane.showMessageDialog(this, "NotePad v1.0\nA simple notepad application\nCreated by us!", "About", JOptionPane.INFORMATION_MESSAGE);
     }
     
     private void showAuthorsDialog() {
