@@ -7,11 +7,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.undo.UndoManager;
 
-public class GUI extends JFrame implements ActionListener , KeyListener{
+public class GUI extends JFrame implements ActionListener {
     private JFrame window;
-
+    
+    private JPanel southPanel;
+    private JLabel charCountLabel;
+    private JLabel wordCountLabel;
+    
     private JTextArea textArea;
     private JMenuBar menuBar;
 
@@ -25,19 +31,19 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
     private JMenuItem findMI;
     private JMenuItem redoMI;
     private JMenuItem undoMI;
+    
+    private JMenu formatMenu;
+    private JMenuItem fontTypeMI;
+    private JMenuItem fontSizeMI;
+    private JMenuItem fontColorMI;
 
     private JMenu aboutMenu;
     private JMenuItem authorsMI;
     private JMenuItem versionMI;
 
     private UndoManager undoManager;
-    ImageIcon light = new ImageIcon("sunlight.png");
-    ImageIcon dark = new ImageIcon("moon.png");
-
-
-    Image lightImage = light.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
-    // Resize the dark image to 32x32 pixels
-    Image darkImage = dark.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+    
+    private JButton themeButton;
     boolean isDarkMode = false;
 
     // Constructor
@@ -45,10 +51,15 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         createFrame();
         createFileMenu();
         createEditMenu();
+        createFormatMenu();
         createAboutMenu();
         createTextArea();
+        createThemeButton();
+        createSouthPanel();
         undoManager = new UndoManager();
         textArea.getDocument().addUndoableEditListener(undoManager);
+        addCharCounter();
+        addWordCounter();
     }
 
     void createFrame() {
@@ -57,7 +68,6 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         window.setIconImage(appIcon.getImage());
 
         window.setTitle("NotePad");
-	window.setIconImage(new ImageIcon("notepad.png").getImage());
         window.setSize(600, 600);
         window.setDefaultCloseOperation(EXIT_ON_CLOSE);
         window.setVisible(true);
@@ -71,9 +81,9 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         fileMenu = new JMenu("File");
 
         // JMenuItems
-        newMI = new JMenuItem("New (ctrl+N)");
-        openMI = new JMenuItem("Open (ctrl+O)");
-        saveMI = new JMenuItem("Save (ctrl+S)");
+        newMI = new JMenuItem("New");
+        openMI = new JMenuItem("Open");
+        saveMI = new JMenuItem("Save");
         exitMI = new JMenuItem("Exit");
 
         newMI.addActionListener(this);
@@ -90,15 +100,20 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
 
         window.setJMenuBar(menuBar);
     }
+    
+    void createSouthPanel() {
+    	southPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 0));
+    	window.add(southPanel, BorderLayout.SOUTH);
+    }
 
     void createEditMenu() {
         // JMenu
         editMenu = new JMenu("Edit");
 
         // JMenuItem
-        findMI = new JMenuItem("Find (ctrl+F)");
-        redoMI = new JMenuItem("Redo (ctrl+Y)");
-        undoMI = new JMenuItem("Undo (ctrl+Z)");
+        findMI = new JMenuItem("Find");
+        redoMI = new JMenuItem("Redo");
+        undoMI = new JMenuItem("Undo");
 
         findMI.addActionListener(this);
         redoMI.addActionListener(this);
@@ -109,6 +124,26 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         editMenu.add(undoMI);
 
         menuBar.add(editMenu);
+    }
+    
+    void createFormatMenu() {
+    	// JMenu
+        formatMenu = new JMenu("Format");
+        
+        // JMenuItem
+        fontTypeMI = new JMenuItem("Font Type");
+        fontSizeMI = new JMenuItem("Font Size");
+        fontColorMI = new JMenuItem("Font Color");
+        
+        formatMenu.add(fontTypeMI);
+        formatMenu.add(fontSizeMI);
+        formatMenu.add(fontColorMI);
+        
+        fontTypeMI.addActionListener(this);
+        fontSizeMI.addActionListener(this);
+        fontColorMI.addActionListener(this);
+        
+        menuBar.add(formatMenu);
     }
     
     void createAboutMenu() {
@@ -127,24 +162,71 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         
         menuBar.add(aboutMenu);
     }
-
+    
     void createThemeButton() {
-        theme = new JButton();
-
-
-        theme.setIcon(new ImageIcon(darkImage));
-        theme.addActionListener(this);
-
-        menuBar.add(Box.createHorizontalGlue());
-        menuBar.add(theme);
-
+    	themeButton = new JButton("Change Theme");
+    	themeButton.setFocusable(false);
+    	themeButton.setIcon(new ImageIcon("sunYellowCrop.png"));
+    	
+    	themeButton.addActionListener(this);
+    	
+    	menuBar.add(Box.createHorizontalGlue());
+    	menuBar.add(themeButton);
     }
+    
     void createTextArea() {
         textArea = new JTextArea();
         textArea.setLineWrap(true);
         textArea.setFont(new Font("Calibri", Font.PLAIN, 25));
         window.add(new JScrollPane(textArea), BorderLayout.CENTER);
-	textArea.addKeyListener(this);
+    }
+    
+    void addCharCounter() {
+        charCountLabel = new JLabel("Characters: 0");
+        southPanel.add(charCountLabel);
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+        	@Override
+            public void insertUpdate(DocumentEvent e) {
+                updateCharCount();
+            }
+        	@Override
+            public void removeUpdate(DocumentEvent e) {
+                updateCharCount();
+            }
+        	@Override
+            public void changedUpdate(DocumentEvent e) {
+                updateCharCount();
+            }
+        });
+    }
+    
+    void addWordCounter() {
+        wordCountLabel = new JLabel("Word Count: 0");
+        southPanel.add(wordCountLabel);
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+        	@Override
+            public void insertUpdate(DocumentEvent e) {
+                updateWordCount();
+            }
+        	@Override
+            public void removeUpdate(DocumentEvent e) {
+        		updateWordCount();
+            }
+        	@Override
+            public void changedUpdate(DocumentEvent e) {
+        		updateWordCount();
+            }
+        });
+    }
+
+    void updateCharCount() {
+        charCountLabel.setText("Characters: " + textArea.getText().length());
+    }
+    
+    void updateWordCount() {
+    	String text = textArea.getText();
+        String[] words = text.split("\\s+");
+    	wordCountLabel.setText("Word Count: " + words.length);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -157,7 +239,7 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         } else if (e.getSource() == versionMI) {
         	showVersionDialog();
         } else if (e.getSource() == newMI) {
-        	newFileT();
+        	newFile();
         } else if (e.getSource() == authorsMI) {
         	showAuthorsDialog();
         } else if (e.getSource() == redoMI) {
@@ -166,7 +248,7 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         	undo();
         } else if (e.getSource() == findMI) {
         	showFindDialog();
-        } else if (e.getSource() == theme) {
+        } else if (e.getSource() == themeButton) {
             changeTheme();
         }
     }
@@ -207,7 +289,7 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         }
      }
     
-    private void newFileT() {
+    private void newFile() {
             // Show a save confirmation dialog
             int option = JOptionPane.showConfirmDialog(
                     window,
@@ -262,6 +344,25 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
         }
     }
     
+    private void changeTheme(){
+        ImageIcon light = new ImageIcon("sunYellowCrop.png");
+        ImageIcon dark = new ImageIcon("moonBlackCrop.jpg");
+
+        if (isDarkMode) {
+            // Switch to light mode
+            textArea.setBackground(Color.white);
+            textArea.setForeground(Color.black);
+            isDarkMode = false;
+            themeButton.setIcon(light);
+        } else {
+            // Switch to dark mode
+            textArea.setBackground(Color.darkGray);
+            textArea.setForeground(Color.white);
+            isDarkMode = true;
+            themeButton.setIcon(dark);
+        }
+    }
+    
     public void showFindDialog() {
     	final String inputValue = JOptionPane.showInputDialog("Find What?");
     	final int l1 = textArea.getText().indexOf(inputValue);
@@ -274,58 +375,7 @@ public class GUI extends JFrame implements ActionListener , KeyListener{
     	}
     }
     
-    private void changeTheme(){
-
-        if (isDarkMode) {
-            // Switch to light mode
-            theme.setIcon(new ImageIcon(lightImage));
-            textArea.setBackground(Color.white);
-            textArea.setForeground(Color.black);
-            isDarkMode = false;
-
-        } else {
-            // Switch to dark mode
-            theme.setIcon(new ImageIcon(darkImage));
-            textArea.setBackground(Color.darkGray);
-            textArea.setForeground(Color.white);
-            isDarkMode = true;
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_S){
-            saveFile();
-        }
-        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_O){
-            openFile();
-        }
-        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z){
-            undo();
-        }
-        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Y){
-            redo();
-        }
-        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F){
-            showFindDialog();
-        }
-        if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_N){
-            newFileT();
-        }
-
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
-     private void showVersionDialog() {
+    private void showVersionDialog() {
         JOptionPane.showMessageDialog(this, "NotePad v1.0\nA simple notepad application\nCreated by us!", "About", JOptionPane.INFORMATION_MESSAGE);
     }
     
