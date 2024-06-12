@@ -1,3 +1,5 @@
+package NPad;
+
 import java.awt.event.*;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -27,8 +29,8 @@ public class GUI extends JFrame implements ActionListener {
     private JMenu aboutMenu;
     private JMenuItem authorsMI;
     private JMenuItem versionMI;
-    private UndoManager undoManager;
 
+    private UndoManager undoManager;
 
     // Constructor
     public GUI() {
@@ -37,7 +39,7 @@ public class GUI extends JFrame implements ActionListener {
         createEditMenu();
         createAboutMenu();
         createTextArea();
-	undoManager = new UndoManager();
+        undoManager = new UndoManager();
         textArea.getDocument().addUndoableEditListener(undoManager);
     }
 
@@ -134,9 +136,15 @@ public class GUI extends JFrame implements ActionListener {
         } else if (e.getSource() == versionMI) {
         	showVersionDialog();
         } else if (e.getSource() == newMI) {
-        	newFile();
+        	newFileT();
         } else if (e.getSource() == authorsMI) {
         	showAuthorsDialog();
+        } else if (e.getSource() == redoMI) {
+        	redo();
+        } else if (e.getSource() == undoMI) {
+        	undo();
+        } else if (e.getSource() == findMI) {
+        	showFindDialog();
         }
     }
 
@@ -176,10 +184,45 @@ public class GUI extends JFrame implements ActionListener {
         }
      }
     
-    public void newFile() {
-    	textArea.setText("");
-    	window.setTitle("Untitled");
-    }
+    private void newFileT() {
+            // Show a save confirmation dialog
+            int option = JOptionPane.showConfirmDialog(
+                    window,
+                    "The current text has been modified. Do you want to save it?",
+                    "Save File",
+                    JOptionPane.YES_NO_CANCEL_OPTION
+            );
+
+            // Handle the user's choice
+            switch (option) {
+                case JOptionPane.YES_OPTION:
+                    if (textArea.getText().trim().isEmpty()) {
+                        // If the text area is empty, show a warning dialog
+                        JOptionPane.showMessageDialog(
+                                window,
+                                "The text field is empty. Please enter some text before saving.",
+                                "Save Error",
+                                JOptionPane.WARNING_MESSAGE
+                        );
+                        break;
+                    } else {
+                        // Save the file
+                        saveFile();
+                        textArea.setText("");
+                        window.setTitle("Untitled");
+                        break;
+                    }
+                case JOptionPane.NO_OPTION:
+                    // Don't save, clear the text area and set the title
+                    textArea.setText("");
+                    setTitle("Untitled");
+                    break;
+                case JOptionPane.CANCEL_OPTION:
+                    // Cancel the operation, do nothing
+                    break;
+            }
+            }
+    
     private void undo() {
         if (undoManager.canUndo()) {
             undoManager.undo();
@@ -194,6 +237,18 @@ public class GUI extends JFrame implements ActionListener {
         } else {
             JOptionPane.showMessageDialog(window, "Nothing to redo.");
         }
+    }
+    
+    public void showFindDialog() {
+    	final String inputValue = JOptionPane.showInputDialog("Find What?");
+    	final int l1 = textArea.getText().indexOf(inputValue);
+    	final int l2 = inputValue.length();
+
+    	if (l1 == -1) {
+    	    JOptionPane.showMessageDialog(null, "Search Value Not Found");
+    	} else {
+    	    textArea.select(l1, l2+l1);
+    	}
     }
     
     private void showVersionDialog() {
