@@ -90,7 +90,7 @@ import javax.swing.undo.UndoManager;
         ImageIcon appIcon = new ImageIcon("NotePad-icon.png");
         window.setIconImage(appIcon.getImage());
 
-        window.setTitle("NotePad");
+        window.setTitle("Untitled");
         window.setSize(600, 600);
         window.setDefaultCloseOperation(EXIT_ON_CLOSE);
         window.setVisible(true);
