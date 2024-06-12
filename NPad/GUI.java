@@ -489,7 +489,7 @@ import javax.swing.undo.UndoManager;
                 case JOptionPane.NO_OPTION:
                     // Don't save, clear the text area and set the title
                     textArea.setText("");
-                    setTitle("Untitled");
+                    window.setTitle("Untitled");
                     break;
                 case JOptionPane.CANCEL_OPTION:
                     // Cancel the operation, do nothing
