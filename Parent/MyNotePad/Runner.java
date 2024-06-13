@@ -1,3 +1,5 @@
+package Parent.MyNotePad;
+
 import javax.swing.SwingUtilities;
 
 public class Runner {
