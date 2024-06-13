@@ -55,14 +55,7 @@ public class Edit {
                 System.out.println(ble);
             }
         }
-        // Add a mouse listener to the text area to remove highlights on mouse click
-        guiObj.getTextArea().addMouseListener(new MouseAdapter() {
-            // @Override
-            public void mouseClicked(MouseEvent e) {
-                guiObj.getTextArea().getHighlighter().removeAllHighlights();
-                guiObj.getTextArea().removeMouseListener(this); // Remove the mouse listener after removing highlights
-            }
-        });
+
     }
 
     public void showReplaceDialog() {

@@ -228,8 +228,16 @@ public class GUI extends JFrame implements ActionListener, KeyListener {
         textArea = new JTextArea();
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
-        textArea.setFont(new Font("Calibri", Font.PLAIN, 25));
+        textArea.setFont(new Font("Calibri", Font.PLAIN, 16));
         textArea.addKeyListener(this);
+        // Add a mouse listener to the text area to remove highlights on mouse click
+        textArea.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                textArea.getHighlighter().removeAllHighlights();
+                textArea.removeMouseListener(this); // Remove the mouse listener after removing highlights
+            }
+        });
         window.add(new JScrollPane(textArea), BorderLayout.CENTER);
     }
 
