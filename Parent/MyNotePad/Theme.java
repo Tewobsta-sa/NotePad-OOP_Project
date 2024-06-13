@@ -13,8 +13,8 @@ public class Theme {
     }
 
     public void changeTheme() {
-        ImageIcon light = new ImageIcon("..\\Parent\\Icons\\sunYellowCrop.png");
-        ImageIcon dark = new ImageIcon("..\\Parent\\Icons\\moonBlackCrop.jpg");
+        ImageIcon light = new ImageIcon("Parent\\Icons\\sunYellowCrop.png");
+        ImageIcon dark = new ImageIcon("Parent\\Icons\\moonBlackCrop.jpg");
         boolean isDarkMode = guiObj.getThemeMode();
 
         if (isDarkMode) {

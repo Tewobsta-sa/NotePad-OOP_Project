@@ -214,7 +214,7 @@ public class GUI extends JFrame implements ActionListener, KeyListener {
     void createThemeButton() {
         themeButton = new JButton("Change Theme");
         themeButton.setFocusable(false);
-        themeButton.setIcon(new ImageIcon("..\\Parent\\Icons\\sunYellowCrop.png"));
+        themeButton.setIcon(new ImageIcon("Parent\\Icons\\sunYellowCrop.png"));
         themeButton.setBorderPainted(false);
         themeButton.setContentAreaFilled(false);
 
