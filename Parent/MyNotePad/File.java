@@ -11,9 +11,6 @@ import javax.swing.JOptionPane;
 
 public class File {
     private GUI guiObj;
-    // private void saveFile()
-    // private void openFile()
-    // private void newFile()
 
     public File(GUI gui) {
         this.guiObj = gui;
@@ -55,6 +52,7 @@ public class File {
             if (filePath != null) {
                 BufferedReader br = new BufferedReader(new FileReader(filePath));
                 String text;
+                guiObj.getTextArea().setText("");
                 while ((text = br.readLine()) != null) {
                     guiObj.getTextArea().append(text + "\n");
                 }

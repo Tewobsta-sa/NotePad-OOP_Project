@@ -235,7 +235,6 @@ public class GUI extends JFrame implements ActionListener, KeyListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 textArea.getHighlighter().removeAllHighlights();
-                textArea.removeMouseListener(this); // Remove the mouse listener after removing highlights
             }
         });
         window.add(new JScrollPane(textArea), BorderLayout.CENTER);
