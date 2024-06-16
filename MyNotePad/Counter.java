@@ -1,4 +1,4 @@
-package Parent.MyNotePad;
+package MyNotePad;
 
 import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;

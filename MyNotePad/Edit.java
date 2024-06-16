@@ -1,13 +1,10 @@
-package Parent.MyNotePad;
+package MyNotePad;
 
 import java.awt.Color;
-import java.awt.event.*;
 import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
-
-import org.w3c.dom.events.MouseEvent;
 
 public class Edit {
     private GUI guiObj;

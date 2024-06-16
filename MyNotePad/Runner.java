@@ -1,4 +1,4 @@
-package Parent.MyNotePad;
+package MyNotePad;
 
 import javax.swing.SwingUtilities;
 

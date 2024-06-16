@@ -1,4 +1,4 @@
-package Parent.MyNotePad;
+package MyNotePad;
 
 import java.awt.FileDialog;
 import java.io.BufferedReader;

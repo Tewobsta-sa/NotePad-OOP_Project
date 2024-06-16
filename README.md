@@ -4,6 +4,10 @@
 
 A simple NotePad program.
 
+## How to Run?
+- Navigate to MyNotePad Directory
+- Run Runner.java
+
 ## Authors
 
 - Lydia Yoseph

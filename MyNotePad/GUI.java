@@ -1,4 +1,4 @@
-package Parent.MyNotePad;
+package MyNotePad;
 
 import java.awt.event.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ public class GUI extends JFrame implements ActionListener, KeyListener {
 
     void createFrame() {
         window = new JFrame();
-        ImageIcon appIcon = new ImageIcon("Parent\\Icons\\NotePad-icon.png");
+        ImageIcon appIcon = new ImageIcon("NotePad-OOP_Project\\Icons\\NotePad-icon.png");
         window.setIconImage(appIcon.getImage());
 
         window.setTitle("NotePad");
@@ -214,7 +214,7 @@ public class GUI extends JFrame implements ActionListener, KeyListener {
     void createThemeButton() {
         themeButton = new JButton("Change Theme");
         themeButton.setFocusable(false);
-        themeButton.setIcon(new ImageIcon("Parent\\Icons\\sunYellowCrop.png"));
+        themeButton.setIcon(new ImageIcon("NotePad-OOP_Project\\Icons\\sunYellowCrop.png"));
         themeButton.setBorderPainted(false);
         themeButton.setContentAreaFilled(false);
 
